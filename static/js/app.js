@@ -11,7 +11,9 @@ const contactInput = document.getElementById("contact");
 
 const errorMessageBox = document.getElementById("error-message");
 const loadingIndicator = document.getElementById("loading-indicator");
+const loadFactsBtn = document.getElementById("load-facts-btn");
 const fillExampleBtn = document.getElementById("fill-example-btn");
+const factsStatus = document.getElementById("facts-status");
 const generateBtn = document.getElementById("generate-btn");
 const previewTab = document.getElementById("preview-tab");
 const editTab = document.getElementById("edit-tab");
@@ -168,6 +170,59 @@ draftEditor.addEventListener("input", () => {
   copyStatus.textContent = "";
 });
 
+const FACTS_STORAGE_KEY = "doc_draft_fact_cards";
+const factInputs = [
+  datetimeInput,
+  locationInput,
+  targetInput,
+  applyMethodInput,
+  contactInput,
+];
+
+function saveFactCards() {
+  try {
+    const facts = {
+      datetime: datetimeInput.value,
+      location: locationInput.value,
+      target: targetInput.value,
+      apply_method: applyMethodInput.value,
+      contact: contactInput.value,
+    };
+    localStorage.setItem(FACTS_STORAGE_KEY, JSON.stringify(facts));
+  } catch (error) {
+    // 브라우저 저장소 사용이 제한된 경우 무시
+  }
+}
+
+function loadFactCards() {
+  try {
+    const raw = localStorage.getItem(FACTS_STORAGE_KEY);
+    if (!raw) {
+      factsStatus.textContent = "저장된 사실 카드가 없습니다.";
+      return;
+    }
+    const facts = JSON.parse(raw);
+    datetimeInput.value = facts.datetime || "";
+    locationInput.value = facts.location || "";
+    targetInput.value = facts.target || "";
+    applyMethodInput.value = facts.apply_method || "";
+    contactInput.value = facts.contact || "";
+    clearError();
+    factsStatus.textContent = "저장된 사실 카드를 불러왔습니다.";
+  } catch (error) {
+    factsStatus.textContent = "저장된 사실 카드를 불러오지 못했습니다.";
+  }
+}
+
+for (const input of factInputs) {
+  input.addEventListener("input", () => {
+    saveFactCards();
+    factsStatus.textContent = "";
+  });
+}
+
+loadFactsBtn.addEventListener("click", loadFactCards);
+
 fillExampleBtn.addEventListener("click", () => {
   docTypeInput.value = "안내문";
   toneInput.value = "공식적";
@@ -178,7 +233,9 @@ fillExampleBtn.addEventListener("click", () => {
   targetInput.value = "학부생 선착순 50명";
   applyMethodInput.value = "학생포털 비교과 신청 페이지";
   contactInput.value = "교무처 교육혁신팀 (02-1234-5678)";
+  saveFactCards();
   clearError();
+  factsStatus.textContent = "";
   copyStatus.textContent = "";
 });
 

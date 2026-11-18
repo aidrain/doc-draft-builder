@@ -4,13 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>대학 행정 문서 초안 생성기</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=4">
 </head>
 <body>
+  <div class="top-accent-bar"></div>
   <div class="container">
     <header class="page-header">
-      <h1>대학 행정 문서 초안 생성기</h1>
-      <p class="subtitle">문서 종류와 핵심 사실을 입력하면 AI가 업무 문서 초안을 작성해 줍니다.</p>
+      <div class="brand-header">
+        <img
+          src="{{ url_for('static', filename='images/suwon-logo.png') }}"
+          alt="수원대학교 로고"
+          class="brand-logo"
+        >
+        <div>
+          <h1>대학 행정 문서 초안 생성기</h1>
+          <p class="subtitle">문서 종류와 핵심 사실을 입력하면 AI가 업무 문서 초안을 작성해 줍니다.</p>
+        </div>
+      </div>
     </header>
 
     <main class="main-grid">
@@ -18,7 +28,10 @@
       <section class="card">
         <div class="card-header">
           <h2>1. 문서 정보 입력</h2>
-          <button type="button" id="fill-example-btn" class="btn-secondary">예시 채우기</button>
+          <div class="result-actions">
+            <button type="button" id="load-facts-btn" class="btn-secondary">불러오기</button>
+            <button type="button" id="fill-example-btn" class="btn-secondary">예시 채우기</button>
+          </div>
         </div>
         <form id="draft-form" novalidate>
           <div class="form-row">
@@ -65,7 +78,7 @@
 
           <div class="facts-section">
             <h3>핵심 사실 카드</h3>
-            <p class="helper-text">비워 둔 항목이 있어도 작성할 수 있습니다. (Prompt B에서는 빈 항목이 [확인 필요]로 표시됩니다.)</p>
+            <p class="helper-text">비워 둔 항목이 있어도 작성할 수 있습니다. 입력 내용은 브라우저에 자동 저장됩니다.</p>
             <div class="facts-grid">
               <div class="form-group">
                 <label for="datetime">일시</label>
@@ -119,6 +132,7 @@
           <div class="form-actions">
             <button type="submit" id="generate-btn" class="btn-primary">초안 생성</button>
           </div>
+          <p id="facts-status" class="copy-status" aria-live="polite"></p>
         </form>
       </section>
 
@@ -155,6 +169,6 @@
     </main>
   </div>
 
-  <script src="{{ url_for('static', filename='js/app.js') }}?v=2" defer></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}?v=3" defer></script>
 </body>
 </html>
